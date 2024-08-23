@@ -1,0 +1,12 @@
+---
+base_packages:
+  - bind
+  - httpd
+  - firewalld
+
+base_services:
+  - named
+  - httpd
+  - firewalld
+
+http_port: 80

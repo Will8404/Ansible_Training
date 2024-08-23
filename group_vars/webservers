@@ -1,0 +1,15 @@
+---
+players:
+  Kamara:
+    name: Umaru Williams
+    uid: 4444
+    groups: wheel,receivers
+    shell: /bin/bash
+    password: "$6$V2VJer0XYm5tEFRJ$AHh6kc6NeX.CvEW0F4Us3xZ4L.OZYY7ORQlgXg4EnRL51U5GSt0iPwCKeEOobdSYfW7IRq5FBJz2wa4ndLSLj0"
+  Brandon:
+    name: Brandon Williams
+    uid: 4455
+    shell: /sbin/nologin
+    groups: wheel
+    password: "$6$V2VJer0XYm5tEFRJ$AHh6kc6NeX.CvEW0F4Us3xZ4L.OZYY7ORQlgXg4EnRL51U5GSt0iPwCKeEOobdSYfW7IRq5FBJz2wa4ndLSLj0"
+  
