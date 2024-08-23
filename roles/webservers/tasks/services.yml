@@ -1,0 +1,8 @@
+---
+- name: Unistall base packages
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - bind
+    - httpd

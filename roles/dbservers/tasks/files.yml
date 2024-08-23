@@ -1,0 +1,25 @@
+- name: Create multiple files
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    state: touch
+    mode: "0600"
+    owner: Rice
+  with_items:
+    - /root/defense/creative
+    - /root/walmart/creative
+    - /root/nfl/creative
+
+- name: Copy host file to dbservers
+  ansible.builtin.copy:
+    src: ~/RHCE/hosts
+    dest: /root
+
+- name: Create multiple directories
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    state: directory
+    mode: "0700"
+  loop:
+    - /root/Camp
+    - /root/Train
+    - /root/USMC

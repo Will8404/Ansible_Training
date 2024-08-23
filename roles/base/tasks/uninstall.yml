@@ -1,0 +1,23 @@
+---
+- name: Uninstall base packages
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: absent
+  loop: "{{ base_packages }}"
+  tags: install_base
+
+#- name: Start base services
+#  ansible.builtin.service:
+#    name: "{{ item }}"
+#    state: started
+#    enabled: yes
+#  loop: "{{ base_services }}"
+#  tags: start_services
+
+#- name: Configure firewall port
+#  ansible.builtin.firewalld:
+#    port: "{{ http_port }}/tcp"
+#    immediate: yes
+#    permanent: yes
+#    state: enabled
+#  tags: config_fire

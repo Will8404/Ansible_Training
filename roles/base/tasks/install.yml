@@ -1,0 +1,20 @@
+---
+- name: Install base services
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ base_packages }}"
+
+- name: Start and enable base services
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop: "{{ base_services }}"
+
+- name: Configure firewall
+  ansible.builtin.firewalld:
+    port: "{{ http_port }}/tcp"
+    immediate: yes
+    permanent: yes
+    state: enabled

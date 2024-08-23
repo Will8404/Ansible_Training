@@ -1,0 +1,9 @@
+- name: Create Users Kamara and Brandon
+  ansible.builtin.user:
+    name: "{{ item.key }}"
+    state: present
+    uid: "{{ item.value.uid }}"
+    shell: "{{ item.value.shell }}"
+    groups: "{{ item.value.groups }}"
+    password: "{{ item.value.password }}"
+  loop: "{{ players | dict2items }}"
