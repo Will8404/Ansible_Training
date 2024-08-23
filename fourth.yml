@@ -1,0 +1,130 @@
+---
+- name: Register and use a variable
+  hosts: dbservers
+  tasks:
+    - name: Register a variable
+      ansible.builtin.command: "cat /etc/httpd/conf/httpd.conf"
+      register: apache_conf
+
+    - name: Use registered variable
+      ansible.builtin.debug:
+        var: apache_conf
+
+- name: Looping with various methods
+  hosts: webservers
+  vars:
+    nonchar: [0,2,4,6,8,10]
+    char: {"one": 1,"two": 2,"three": 3,"four": 4,"five": 5,"six": 6}
+  tags: loops
+  tasks:
+    - name: Looping with list
+      ansible.builtin.debug:
+        msg: "This number is greater than 14, and the precise number is {{ item }}"
+      loop: [10,12,14,16,18]
+      when: item > 14
+
+    - name: Looping using variable
+      ansible.builtin.debug:
+        msg: "{{ item }} is the number {{ item }}"
+      loop: "{{ nonchar }}"
+      when: item > 5
+
+    - name: Loop using range
+      ansible.builtin.debug:
+        msg: "This number is greater than 25, and the precise number is {{ item }}"
+      loop: "{{ range(20, 30) }}"
+      when: item > 25
+
+    - name: Loop using dictionary
+      ansible.builtin.debug:
+        msg: "The number {{ item.value }} is the character equivalent of {{ item.key }}"
+      loop: "{{ query('dict', char) }}"
+      when: item.value > 3
+
+    - name: Read the contents of the bonds.yml file
+      ansible.builtin.debug:
+      loop: "{{ query('file', '~/RHCE/bonds.yml') }}"
+
+- name: Getting info from facts
+  hosts: webservers
+  vars:
+    ballers:
+      LeBron:
+        name: LeBron James
+        uid: "03636"
+        groups: wheel,king
+        telephone: "(240)-278-3636"
+        shell: /bin/bash
+      Jordan:
+        name: Michael Jordan
+        uid: "02323"
+        groups: wheel,great
+        shell: /bin/bash
+        telephone: "(301)-232-3232"
+  tags: facts
+  tasks:
+    - name: Create king and great groups
+      ansible.builtin.group:
+        name: "{{ item }}"
+        state: present
+      loop: [king,great]
+
+    - name: Get LeBron and Jordan's information
+      ansible.builtin.debug:
+        msg: "User {{ item.key }} is {{ item.value.name }}, they're in the {{ item.value.groups }} group, their phone number is {{ item.value.telephone }}, and is using the {{ item.value.shell }} shell"
+      loop: "{{ ballers | dict2items }}"
+
+    - name: Get IP address and distro info from facts
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }}'s IP address is {{ ansible_facts['enp0s3']['ipv4']['address'] }}, and is using {{ ansible_facts['distribution'] }} OS"
+
+- name: Registering variables from loop and display rc
+  hosts: dbservers
+  tags: return
+  tasks:
+    - name: Register variable
+      ansible.builtin.command: "echo {{ item }}"
+      #ansible.builtin.command: "cat {{ item }}"
+      loop: ["pretty","ugly"]
+      register: subjective
+
+    - name: Fail if rc in non-zero
+      ansible.builtin.fail:
+        msg: "{{ item.cmd }} has a non 0 return code"
+      loop: "{{ subjective.results }}"
+      when: item.rc !=0
+      ignore_errors: yes
+
+- name: Install base services using block
+  hosts: webservers
+  vars:
+    base_packages: [httpd,bind]
+    base_services: [httpd,named]
+  tags: install
+  tasks:
+    - name: Uninstall base packages on CentOS servers
+      block:
+
+      - name: Uninstall base packages
+        ansible.builtin.dnf:
+          name: "{{ item }}"
+          state: absent
+        loop: "{{ base_packages }}"
+        when: ansible_facts['distribution'] == 'CentOS'
+
+      - name: Install base packages
+        ansible.builtin.dnf:
+          name: "{{ item }}"
+          state: present
+        loop: "{{ base_packages }}"
+        when: ansible_facts['distribution'] == 'CentOS'
+
+      - name: Start and enable base services
+        ansible.builtin.service:
+          name: "{{ item }}"
+          state: started
+          enabled: yes
+        loop: "{{ base_services }}"
+        when: ansible_facts['distribution'] == 'CentOS'
+        become: yes
+        become_user: root
