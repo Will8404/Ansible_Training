@@ -1,0 +1,12 @@
+---
+- name: Create new files
+  ansible.builtin.file:
+    name: "{{ item }}"
+    state: touch
+    mode: "0600"
+    owner: Rhoda
+    group: Rhoda
+  loop:
+    - /root/Prince/fitness
+    - /root/Wales/health
+    - /root/Schools/Freetown/practice

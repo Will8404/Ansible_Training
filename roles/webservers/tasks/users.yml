@@ -1,0 +1,9 @@
+---
+- name: Create users Oben, Cash, and Musa
+  ansible.builtin.user:
+    name: "{{ item.key }}"
+    state: present
+    groups: wheel
+    uid: "{{ item.value.uid }}"
+    password: "{{ item.value.password }}"
+  loop: "{{ users | dict2items }}"
