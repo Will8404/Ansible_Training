@@ -1,8 +1,0 @@
-- name: Create new directory on dbservers
-  ansible.builtin.file:
-    name: "{{ item }}"
-    state: directory
-  loop:
-    - /root/Prince
-    - /root/wales
-    - /root/Schools/Freetown

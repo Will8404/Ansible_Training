@@ -1,4 +1,0 @@
----
-- include_tasks: newdir.yml
-- include_tasks: newfiles.yml
-- include_tasks: newusers.yml

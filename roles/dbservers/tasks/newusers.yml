@@ -1,9 +1,0 @@
-- name: Create users Jimmy Butler Shaq
-  ansible.builtin.user:
-    name: "{{ item.key }}"
-    groups: wheel
-    uid: "{{ item.value.uid }}"
-    password: "{{ item.value.password }}"
-    state: present
-  loop: "{{ users | dict2items }}"
-
