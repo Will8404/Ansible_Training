@@ -1,0 +1,11 @@
+---
+- name: Create welcome template for users root, Moss, and Rice
+  ansible.builtin.template:
+    src: my_template.j2
+    dest: "{{ item.dest }}"
+  loop:
+    - { user: "{{ ansible_facts['user_id'] }}", dest: "/{{ ansible_facts['user_id'] }}/welcome_msg.txt" }
+    - { user: "Moss", dest: /home/Moss/welcome_msg.txt }
+    - { user: "Rice", dest: /home/Rice/welcome_msg.txt }
+  vars:
+    user: "{{ item.user }}"
