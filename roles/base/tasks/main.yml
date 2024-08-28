@@ -1,4 +1,8 @@
 ---
 #- include_tasks: uninstall.yml
 
+# Include welcome template
+- include_tasks: welcome_template.yml
+
+# Install base service
 - include_tasks: install.yml
